@@ -8,8 +8,8 @@
     const byte MID = -1;
 
     int const InitPos = 0;  
-    int const EndPos = 120;
-    int const MidPos = 50;
+    int const EndPos = 100;
+    int const MidPos = 40;
     int distance;           // biến lưu khoảng cách
     int disLeft;           // biến lưu khoảng cách
     int disMid;           // biến lưu khoảng cách
@@ -19,7 +19,7 @@
     int danger=30;
     Servo servo;  
     MotorDriver m;
-    int speed=200;
+    int speed=255;
     int turn=255;
     int pos = 0;   
     int safe =15; 
@@ -30,7 +30,7 @@ void setup()
     pinMode(echo,INPUT);    // chân echo sẽ nhận tín hiệu
     servo.attach(9);
     servo.write(MidPos);  
-
+    pinMode(led,OUTPUT);
 }
  
 int doDistance(){
@@ -76,39 +76,46 @@ int scan(bool dir){
   }
   return  distance;
 }
-
-
-void tien(MotorDriver m){
-   m.motor(4,FORWARD,speed);
-   m.motor(3,FORWARD,speed);  
-   m.motor(2,BACKWARD,speed);
-   m.motor(1,BACKWARD,speed);  
-}
-void lui(MotorDriver m){
-   m.motor(1,FORWARD,speed/2);
-   m.motor(2,FORWARD,speed/2);  
-   m.motor(3,BACKWARD,speed/2);
-   m.motor(4,BACKWARD,speed/2);  
-}
-void quayTrai(MotorDriver m){
-   m.motor(1,FORWARD,speed);
-   m.motor(2,FORWARD,speed);  
-   m.motor(3,FORWARD,speed);
-   m.motor(4,FORWARD,speed);  
-}
-    
-void quayPhai(MotorDriver m){
-   m.motor(1,BACKWARD,speed);
-   m.motor(2,BACKWARD,speed);  
-   m.motor(3,BACKWARD,speed);
-   m.motor(4,BACKWARD,speed);  
-}   
 void dung(MotorDriver m){
   m.motor(1,RELEASE,speed);
    m.motor(2,RELEASE,speed);  
    m.motor(3,RELEASE,speed);
    m.motor(4,RELEASE,speed); 
 }
+
+void tien(MotorDriver m){
+   m.motor(4,BACKWARD,speed);
+   m.motor(3,BACKWARD,speed);  
+   m.motor(2,BACKWARD,speed);
+   m.motor(1,BACKWARD,speed);
+ 
+ 
+}
+void lui(MotorDriver m){
+   m.motor(1,FORWARD,speed);
+   m.motor(2,FORWARD,speed);  
+   m.motor(3,FORWARD,speed);
+   m.motor(4,FORWARD,speed);  
+   
+
+}
+void quayPhai(MotorDriver m){
+   m.motor(1,FORWARD,speed);
+   m.motor(2,FORWARD,speed);  
+   m.motor(3,BACKWARD,speed);
+   m.motor(4,BACKWARD,speed);  
+
+}
+    
+void quayTrai(MotorDriver m){
+   m.motor(1,BACKWARD,speed);
+   m.motor(2,BACKWARD,speed);  
+   m.motor(3,FORWARD,speed);
+   m.motor(4,FORWARD,speed);  
+    delay(gap);
+ 
+}   
+
 int fullScan(){
     disLeft= scan(LEFT);    
   if(disLeft<safe) {return disLeft;}    
@@ -132,40 +139,53 @@ int fullScan(){
 }
  void loop()
 {
-    distance=fullScan();
+    // distance=fullScan();
 
     
-    if (distance<=safe) {
-      digitalWrite(led,1);
+    // if (distance<=safe) {
+    //   digitalWrite(led,1);
 
-    //   dung(m);
-    // delay(gap*3);
-    // lui(m);
-    //   //delay(5000);
+    // //   dung(m);
+    // // delay(gap*3);
+    // // lui(m);
+    // //   //delay(5000);
       
-    //   //lui(m);
+    // //   //lui(m);
      
       
-    //   if(disRight>disLeft>danger){
-    //     quayPhai(m);
-    //   }
-    //   else if(disLeft>disRight>danger){
-    //     quayTrai(m);
-    //   }   
-    //   else{
-    //     quayPhai(m);
-    //     quayPhai(m);
-    //   }       
+    // //   if(disRight>disLeft>danger){
+    // //     quayPhai(m);
+    // //   }
+    // //   else if(disLeft>disRight>danger){
+    // //     quayTrai(m);
+    // //   }   
+    // //   else{
+    // //     quayPhai(m);
+    // //     quayPhai(m);
+    // //   }       
       
 
 
-     }
+    //  }
 
-    else  {
-          // tien(m); 
-          //delay(gap);
-          digitalWrite(led,0);
+    // else  {
+    //       tien(m); 
+    //       //delay(gap);
+    //       digitalWrite(led,0);
 
-      }
-  
+    //   }
+//   tien(m);
+
+//   delay(5000);
+// lui(m);
+
+ quayTrai(m);
+// quayTrai(m);
+ delay(10000);
+ dung(m);
+ delay(5000);
+// quayPhai(m);
+// quayPhai(m);
+// delay(4000);
+
 }
