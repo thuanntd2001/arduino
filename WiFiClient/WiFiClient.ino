@@ -16,7 +16,7 @@ const char* password = STAPSK;
 const char* host = "api.thingspeak.com";
 const uint16_t port = 80;
 
-String API = "CJZ1G46URZWEGRVR";
+String API = "255XXW7UALLLYJBV";
 String field = "field1";
 int valSensor;
 
@@ -66,13 +66,29 @@ void loop() {
   // This will send a string to the server
   Serial.println("sending data to server");
   valSensor = random(100000); // random value, change with sensor value if using sensor
-  String urlUp = "GET /update?api_key="+ API +"&"+ field +"="+String(valSensor);
-  Serial.println(valSensor);
-  Serial.print(urlUp);
-  Serial.print(",");
-  Serial.println(urlUp.length());
+ // String urlUp = "GET /update?api_key="+ API +"&"+ field +"="+String(valSensor);
+  // Serial.println(valSensor);
+  // Serial.print(urlUp);
+  // Serial.print(",");
+  // Serial.println(urlUp.length());
   if (client.connected()) {
-    client.print(urlUp);    
+      String data_to_send = API;
+      data_to_send += "&field1=";
+      data_to_send += valSensor;
+      // data_to_send += "&field2=";
+      // data_to_send += t;
+      data_to_send += "\r\n\r\n";
+
+      client.print("POST /update HTTP/1.1\n");
+      client.print("Host: api.thingspeak.com\n");
+      client.print("Connection: close\n");
+      client.print("X-THINGSPEAKAPIKEY: " + API + "\n");
+      client.print("Content-Type: application/x-www-form-urlencoded\n");
+      client.print("Content-Length: ");
+      client.print(data_to_send.length());
+      client.print("\n\n");
+      client.print(data_to_send);
+         
   }
 
   // wait for data to be available
@@ -100,7 +116,7 @@ void loop() {
   client.stop();
 
   if (wait) {
-    delay(300000); // execute once every 5 minutes, don't flood remote service
+    delay(30000); // execute once every 5 minutes, don't flood remote service
   }
   wait = true;
 }
