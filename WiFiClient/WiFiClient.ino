@@ -13,8 +13,12 @@
 const char* ssid     = STASSID;
 const char* password = STAPSK;
 
-const char* host = "djxmmx.net";
-const uint16_t port = 17;
+const char* host = "api.thingspeak.com";
+const uint16_t port = 80;
+
+String API = "CJZ1G46URZWEGRVR";
+String field = "field1";
+int valSensor;
 
 void setup() {
   Serial.begin(115200);
@@ -61,8 +65,14 @@ void loop() {
 
   // This will send a string to the server
   Serial.println("sending data to server");
+  valSensor = random(100000); // random value, change with sensor value if using sensor
+  String urlUp = "GET /update?api_key="+ API +"&"+ field +"="+String(valSensor);
+  Serial.println(valSensor);
+  Serial.print(urlUp);
+  Serial.print(",");
+  Serial.println(urlUp.length());
   if (client.connected()) {
-    client.println("hello from ESP8266");
+    client.print(urlUp);    
   }
 
   // wait for data to be available
