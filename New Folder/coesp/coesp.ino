@@ -1,9 +1,12 @@
-
+#include <Servo.h>
+#include <SoftwareSerial.h>
+#include "MotorDriver.h"
 String ssid     = "KYV41";  // SSID to connect to
 String password = "kamomechan"; // Our virtual wifi has no password 
 String host     = "api.thingspeak.com"; // Open Weather Map API
 const int httpPort   = 80;
-String url     = "/update?api_key=255XXW7UALLLYJBV&field1=";
+String url     = "/update?api_key=255XXW7UALLLYJBV&field1=0";
+SoftwareSerial esp8266(2,3); 
 //arduino+sensor
     const int trig = 13;     // chân trig của HC-SR04
     const int echo = 2;     // chân echo của HC-SR04
@@ -31,7 +34,7 @@ String url     = "/update?api_key=255XXW7UALLLYJBV&field1=";
 
 int setupESP8266(void) {
   // Start our ESP8266 Serial Communication
-  Serial.begin(115200);   // Serial connection over USB to computer
+  Serial.begin(9600);   // Serial connection over USB to computer
   Serial.println("AT");   // Serial connection on Tx / Rx port to ESP8266
   delay(10);        // Wait a little for the ESP to respond
   if (!Serial.find("OK")) return 1;
@@ -73,7 +76,7 @@ int doDistance(){
 void anydata(void) {
   
   //int temp = map(analogRead(A0),20,358,-40,125);
-    temp=doDistance();
+    int temp=doDistance();
   
   // Construct our HTTP call
   String httpPacket = "GET " + url + String(temp) + " HTTP/1.1\r\nHost: " + host + "\r\n\r\n";
