@@ -3,8 +3,8 @@
 #include <ESP8266WebServer.h> //Import ESP8266 WiFi Webserver
 
 #ifndef APSSID
-#define APSSID "microdigisoft"
-#define APPSK  "microdigisoft"
+#define APSSID "KYV42"
+#define APPSK  "kamomechan"
 #endif
 
 /* Set these to your desired credentials. */
@@ -37,5 +37,5 @@ void setup() {
 }
 
 void loop() {
-  server.handleClient();
+  //server.handleClient();
 }
