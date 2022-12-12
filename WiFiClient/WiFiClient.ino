@@ -116,7 +116,7 @@ void loop() {
   client.stop();
 
   if (wait) {
-    delay(30000); // execute once every 5 minutes, don't flood remote service
+    delay(30000); // execute once every 30s, don't flood remote service
   }
   wait = true;
 }
