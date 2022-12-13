@@ -19,7 +19,29 @@ const uint16_t port = 80;
 String API = "255XXW7UALLLYJBV";
 String field = "field1";
 int valSensor;
+const int trig = 1;     // chân trig của HC-SR04
+const int echo = 4;     // chân echo của HC-SR04
+int doDistance(){
+  unsigned long duration; // biến đo thời gian
+    int distance;           // biến lưu khoảng cách
+    
+    /* Phát xung từ chân trig */
+    digitalWrite(trig,0);   // tắt chân trig
+    delayMicroseconds(2);
+    digitalWrite(trig,1);   // phát xung từ chân trig
+    delayMicroseconds(5);   // xung có độ dài 5 microSeconds
+    digitalWrite(trig,0);   // tắt chân trig
+    
+    /* Tính toán thời gian */
+    // Đo độ rộng xung HIGH ở chân echo. 
+    duration = pulseIn(echo,HIGH);  
+    // Tính khoảng cách đến vật.
+    distance = int(duration/2/29.412);
+    
+    /* In kết quả ra Serial Monitor */
+    return distance;
 
+}
 void setup() {
   Serial.begin(115200);
 
@@ -65,7 +87,7 @@ void loop() {
 
   // This will send a string to the server
   Serial.println("sending data to server");
-  valSensor = random(100000); // random value, change with sensor value if using sensor
+  valSensor = doDistance(); //lay khoang cach tu cam bien
  // String urlUp = "GET /update?api_key="+ API +"&"+ field +"="+String(valSensor);
   // Serial.println(valSensor);
   // Serial.print(urlUp);
