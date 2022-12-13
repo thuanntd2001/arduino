@@ -23,15 +23,7 @@
     int turn=255;
     int pos = 0;   
     int safe =15; 
-void setup()
-{
-    Serial.begin(9600);     // giao tiếp Serial với baudrate 9600
-    pinMode(trig,OUTPUT);   // chân trig sẽ phát tín hiệu
-    pinMode(echo,INPUT);    // chân echo sẽ nhận tín hiệu
-    servo.attach(9);
-    servo.write(MidPos);  
-    pinMode(led,OUTPUT);
-}
+
  
 int doDistance(){
   unsigned long duration; // biến đo thời gian
@@ -137,6 +129,16 @@ int fullScan(){
 
 
 }
+void setup()
+{
+    Serial.begin(9600);     // giao tiếp Serial với baudrate 9600
+    pinMode(trig,OUTPUT);   // chân trig sẽ phát tín hiệu
+    pinMode(echo,INPUT);    // chân echo sẽ nhận tín hiệu
+    servo.attach(9);
+    servo.write(MidPos);  
+    pinMode(led,OUTPUT);
+    tien(m);
+}
  void loop()
 {
     // distance=fullScan();
@@ -179,11 +181,10 @@ int fullScan(){
 //   delay(5000);
 // lui(m);
 
- quayTrai(m);
+ //quayTrai(m);
 // quayTrai(m);
- delay(10000);
- dung(m);
- delay(5000);
+ //delay(10000);
+
 // quayPhai(m);
 // quayPhai(m);
 // delay(4000);
