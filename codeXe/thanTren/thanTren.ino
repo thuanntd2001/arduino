@@ -23,8 +23,12 @@
     int turn=255;
     int pos = 0;   
     int safe =15; 
+    int pinC1=A0;
+    int pinC2=A4;
+    int pinC3=A5;
 
- 
+
+
 int doDistance(){
   unsigned long duration; // biến đo thời gian
     int distance;           // biến lưu khoảng cách
