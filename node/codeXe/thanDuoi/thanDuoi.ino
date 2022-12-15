@@ -1,6 +1,12 @@
 #include <Servo.h>
 #include "MotorDriver.h"
 
+/*011 tien 
+110 lui 
+101 trai
+100 phai
+010 dung
+001 tulai*/
 
 int pinC1=A0;
 int pinC2=A4;
@@ -13,10 +19,10 @@ int speed = 255;
 MotorDriver m;
 
 void dung(MotorDriver m){
-  m.motor(1,RELEASE,speed);
-   m.motor(2,RELEASE,speed);  
-   m.motor(3,RELEASE,speed);
-   m.motor(4,RELEASE,speed); 
+  m.motor(1,BRAKE,speed);
+   m.motor(2,BRAKE,speed);  
+   m.motor(3,BRAKE,speed);
+   m.motor(4,BRAKE,speed); 
 }
 
 void lui(MotorDriver m){
@@ -51,16 +57,7 @@ void quayTrai(MotorDriver m){
 
 }   
 
-void reTrai(MotorDriver m){
-    quayTrai( m);
-    delay(gap);
-    tien(m);
-}
-void rePhai(MotorDriver m){
-    quayPhai( m);
-    delay(gap);
-    tien(m);
-}
+
 void setup()
 {
  
@@ -84,42 +81,18 @@ void setup()
   Serial.print(c3);
   Serial.print("\n");
   
-
+/*011 tien 
+110 lui 
+101 trai
+100 phai
+010 dung*/
   
-  if(c1==HIGH){//tien lui re
-    if (c2==HIGH){//tien lui
-        if (c3==HIGH){
-            tien(m);
-        }else{
-            lui(m);
-        }
+  if(c1==0 && c2==1 && c3==1){tien(m);} 
+ if(c1==1 && c2==1 && c3==0){lui(m);}
+ if(c1==1 && c2==0 && c3==1){quayTrai(m);}
+ if(c1==1 && c2==0 && c3==0){quayPhai(m);}
+ if(c1==0 && c2==1 && c3==0){dung(m);}
 
-    }else {//re
-        if (c3==HIGH){
-            reTrai(m);
-        }else{
-            rePhai(m);
-        }
-    }
-
-  }
-  else{//dung quay
-    if (c2==HIGH){//quay
-            if (c3==HIGH){
-                quayTrai(m);
-            }else{
-                quayPhai(m);
-            }
-
-        }else {//dung
-            if (c3==HIGH){
-                //reTrai(m);
-            }else{
-                dung(m);
-            }
-        }
-    }  
-delay(1000);
 }
 
 
