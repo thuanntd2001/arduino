@@ -93,9 +93,13 @@ void loop() {
   // Serial.print(urlUp);
   // Serial.print(",");
   // Serial.println(urlUp.length());
+    Serial.println("valSensor la: ");
+   Serial.println(valSensor);
+
+
   if (client.connected()) {
       String data_to_send = API;
-      data_to_send += "&field1=";
+      data_to_send += "&field1="; 
       data_to_send += valSensor;
       // data_to_send += "&field2=";
       // data_to_send += t;
@@ -138,7 +142,7 @@ void loop() {
   client.stop();
 
   if (wait) {
-    delay(30000); // execute once every 30s, don't flood remote service
+    delay(3000); // execute once every 30s, don't flood remote service
   }
   wait = true;
 }

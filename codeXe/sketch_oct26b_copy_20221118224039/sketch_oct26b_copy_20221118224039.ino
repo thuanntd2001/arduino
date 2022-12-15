@@ -75,7 +75,7 @@ void dung(MotorDriver m){
    m.motor(4,RELEASE,speed); 
 }
 
-void tien(MotorDriver m){
+void lui(MotorDriver m){
    m.motor(4,BACKWARD,speed);
    m.motor(3,BACKWARD,speed);  
    m.motor(2,BACKWARD,speed);
@@ -83,7 +83,7 @@ void tien(MotorDriver m){
  
  
 }
-void lui(MotorDriver m){
+void tien(MotorDriver m){
    m.motor(1,FORWARD,speed);
    m.motor(2,FORWARD,speed);  
    m.motor(3,FORWARD,speed);
@@ -138,6 +138,12 @@ void setup()
     servo.write(MidPos);  
     pinMode(led,OUTPUT);
     tien(m);
+    delay(5000);
+    lui(m);
+    delay(9000);
+    dung(m);
+    delay(5000);
+    tien(m); 
 }
  void loop()
 {
@@ -148,8 +154,7 @@ void setup()
     //   digitalWrite(led,1);
 
     // //   dung(m);
-    // // delay(gap*3);
-    // // lui(m);
+    
     // //   //delay(5000);
       
     // //   //lui(m);
@@ -157,7 +162,12 @@ void setup()
       
     // //   if(disRight>disLeft>danger){
     // //     quayPhai(m);
-    // //   }
+    // //   } delay(5000);
+    lui(m);
+    delay(9000);
+    dung(m);
+    delay(5000);
+    tien(m);
     // //   else if(disLeft>disRight>danger){
     // //     quayTrai(m);
     // //   }   
