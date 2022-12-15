@@ -5,10 +5,12 @@
 int pinC1=A0;
 int pinC2=A4;
 int pinC3=A5;
-int c1;
-int c2;
-int c3;
+int c1=0;
+int c2=0;
+int c3=0;
 int gap=300;
+int speed = 255;
+MotorDriver m;
 
 void dung(MotorDriver m){
   m.motor(1,RELEASE,speed);
@@ -65,6 +67,7 @@ void setup()
     pinMode(pinC1,INPUT);    
     pinMode(pinC2,INPUT);    
     pinMode(pinC3,INPUT);    
+    Serial.begin(9600);
 
 
 }
@@ -74,16 +77,25 @@ void setup()
   c1=digitalRead(pinC1);
   c2=digitalRead(pinC2);
   c3=digitalRead(pinC3);
-  if(c1==HIGHT){//tien lui re
-    if (c2==HIGHT){//tien lui
-        if (c3==HIGHT){
+  Serial.print(c1);
+  Serial.print(" ");
+  Serial.print(c2);
+  Serial.print(" ");
+  Serial.print(c3);
+  Serial.print("\n");
+  
+
+  
+  if(c1==HIGH){//tien lui re
+    if (c2==HIGH){//tien lui
+        if (c3==HIGH){
             tien(m);
         }else{
             lui(m);
         }
 
     }else {//re
-        if (c3==HIGHT){
+        if (c3==HIGH){
             reTrai(m);
         }else{
             rePhai(m);
@@ -92,22 +104,22 @@ void setup()
 
   }
   else{//dung quay
-    if (c2==HIGHT){//quay
-            if (c3==HIGHT){
+    if (c2==HIGH){//quay
+            if (c3==HIGH){
                 quayTrai(m);
             }else{
                 quayPhai(m);
             }
 
         }else {//dung
-            if (c3==HIGHT){
+            if (c3==HIGH){
                 //reTrai(m);
             }else{
                 dung(m);
             }
         }
     }  
-
+delay(1000);
 }
 
 

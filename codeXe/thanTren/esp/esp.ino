@@ -47,7 +47,7 @@ void setup() {
     pinMode(pinC2,OUTPUT);    
     pinMode(pinC3,OUTPUT);    
 
-    Serial.begin(115200);
+    Serial.begin(9600);
     WiFi.begin(ssid, password);  //Connect to the WiFi network
  
     while (WiFi.status() != WL_CONNECTED) {  //Wait for connection
@@ -71,41 +71,42 @@ void setup() {
 void loop() {
  
     server.handleClient(); //Handling of incoming requests
-    if(command=="tien"){
-        digitalWrite(pinC1,HIGHT);
-        digitalWrite(pinC2,HIGHT);
-        digitalWrite(pinC3,HIGHT);
+    if(command=="command=tien"){
+        digitalWrite(pinC1,HIGH);
+        digitalWrite(pinC2,HIGH);
+        digitalWrite(pinC3,HIGH);
     }
-     if(command=="lui"){
-            digitalWrite(pinC1,HIGHT);
-            digitalWrite(pinC2,HIGHT);
+     if(command=="command=lui"){
+            digitalWrite(pinC1,HIGH);
+            digitalWrite(pinC2,HIGH);
             digitalWrite(pinC3,LOW);
         }
-     if(command=="trai"){
-            digitalWrite(pinC1,HIGHT);
+     if(command=="command=trai"){
+            digitalWrite(pinC1,HIGH);
             digitalWrite(pinC2,LOW);
-            digitalWrite(pinC3,HIGHT);
+            digitalWrite(pinC3,HIGH);
         }
-     if(command=="phai"){
-            digitalWrite(pinC1,HIGHT);
-            digitalWrite(pinC2,LOW);
-            digitalWrite(pinC3,LOW);
-        }
-     if(command=="quayTrai"){
-            digitalWrite(pinC1,LOW);
-            digitalWrite(pinC2,HIGHT);
-            digitalWrite(pinC3,HIGHT);
-        }
-     if(command=="quayPhai"){
-            digitalWrite(pinC1,LOW);
-            digitalWrite(pinC2,HIGHT);
-            digitalWrite(pinC3,LOW);
-        }
-     if(command=="dung"){
-            digitalWrite(pinC1,LOW);
+     if(command=="command=phai"){
+            digitalWrite(pinC1,HIGH);
             digitalWrite(pinC2,LOW);
             digitalWrite(pinC3,LOW);
         }
+     if(command=="command=quayTrai"){
+            digitalWrite(pinC1,LOW);
+            digitalWrite(pinC2,HIGH);
+            digitalWrite(pinC3,HIGH);
+        }
+     if(command=="command=quayPhai"){
+            digitalWrite(pinC1,LOW);
+            digitalWrite(pinC2,HIGH);
+            digitalWrite(pinC3,LOW);
+        }
+     if(command=="command=dung"){
+            digitalWrite(pinC1,LOW);
+            digitalWrite(pinC2,LOW);
+            digitalWrite(pinC3,LOW);
+        }
+
 
  
 }
