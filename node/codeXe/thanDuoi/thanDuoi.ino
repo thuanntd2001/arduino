@@ -1,4 +1,4 @@
-#include <Servo.h>
+
 #include "MotorDriver.h"
 
 /*011 tien 
@@ -6,7 +6,7 @@
 101 trai
 100 phai
 010 dung
-001 tulai*/
+001 tha*/
 
 int pinC1=A0;
 int pinC2=A4;
@@ -23,6 +23,12 @@ void dung(MotorDriver m){
    m.motor(2,BRAKE,speed);  
    m.motor(3,BRAKE,speed);
    m.motor(4,BRAKE,speed); 
+}
+void tha(MotorDriver m){
+  m.motor(1,RELEASE,speed);
+   m.motor(2,RELEASE,speed);  
+   m.motor(3,RELEASE,speed);
+   m.motor(4,RELEASE,speed); 
 }
 
 void lui(MotorDriver m){
@@ -85,14 +91,15 @@ void setup()
 110 lui 
 101 trai
 100 phai
-010 dung*/
+010 dung
+001  tha*/
   
   if(c1==0 && c2==1 && c3==1){tien(m);} 
  if(c1==1 && c2==1 && c3==0){lui(m);}
  if(c1==1 && c2==0 && c3==1){quayTrai(m);}
  if(c1==1 && c2==0 && c3==0){quayPhai(m);}
  if(c1==0 && c2==1 && c3==0){dung(m);}
-
+if(c1==0 && c2==0 && c3==1){tha(m);} 
 }
 
 
