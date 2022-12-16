@@ -87,12 +87,14 @@ void loop() {
 
   // This will send a string to the server
   Serial.println("sending data to server");
-  valSensor = doDistance(); //lay khoang cach tu cam bien
+  // valSensor = doDistance(); //lay khoang cach tu cam bien
+  valSensor= random(200);
  // String urlUp = "GET /update?api_key="+ API +"&"+ field +"="+String(valSensor);
   // Serial.println(valSensor);
   // Serial.print(urlUp);
   // Serial.print(",");
   // Serial.println(urlUp.length());
+  
     Serial.println("valSensor la: ");
    Serial.println(valSensor);
 

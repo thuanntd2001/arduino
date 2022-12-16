@@ -4,8 +4,11 @@
 int pinC1=14;
 int pinC2=12;
 int pinC3=13;
+
 int gap=10; 
-int turnGap=400; 
+int turnGap=360; 
+int cirGap=40;
+
 ESP8266WebServer server(80);
  
  const char* ssid = "KYV41";
@@ -13,7 +16,7 @@ ESP8266WebServer server(80);
 
 // const char* ssid = "NOKIA";
 // const char* password =  "123456789";
-String command="command=dung";
+String command="";
 const char html[] = R"=====(
 <!DOCTYPE html>
 <html>
@@ -85,14 +88,24 @@ void dung(){
 void trai(){
         quayTrai();
         delay(turnGap);
-        dung();
-    }
+command="command=dung" ;   }
 void phai(){
         quayPhai();
         delay(turnGap);
-        dung();
-    }
+command="command=dung";    }
 
+void quayPhaiThat(){
+        quayPhai();
+        delay(cirGap);
+        dung();
+        delay(cirGap);
+    }
+void quayTraiThat(){
+        quayTrai();
+        delay(cirGap);
+        dung();
+        delay(cirGap);
+    }
 
 
  
@@ -119,7 +132,7 @@ void setup() {
  
     server.begin(); //Start the server
     Serial.println("Server listening");
- 
+ dung();
 }
  
 void loop() {
@@ -145,12 +158,12 @@ void loop() {
      if(command=="command=quayTrai"){
       Serial.println("quayTrai");
 
-       quayTrai();
+       quayTraiThat();
         }
      if(command=="command=quayPhai"){
       Serial.println("quayPhai");
 
-          quayPhai();
+          quayPhaiThat();
         }
      if(command=="command=dung"){
       Serial.println("dung");
