@@ -4,7 +4,8 @@
 int pinC1=14;
 int pinC2=12;
 int pinC3=13;
-int gap=300; 
+int gap=10; 
+int turnGap=400; 
 ESP8266WebServer server(80);
  
  const char* ssid = "KYV41";
@@ -23,7 +24,7 @@ const char html[] = R"=====(
 
 </style>
 <body>
-<form action="http://192.168.43.242/body" method="post" style=" color:blue;text-align:center"> <input type="hidden" name="command" value="tien"> <button style="font-size: 40"> tien</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:left; margin=25%"> <input type="hidden" name="command" value="trai"> <button style="font-size: 40"> trai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:right"> <input type="hidden" name="command" value="phai"> <button style="font-size: 40"> phai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:center"> <input type="hidden" name="command" value="lui"> <button style="font-size: 40"> lui</button></form><br><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:center"> <input type="hidden" name="command" value="dung"> <button style="font-size: 40"> dung</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:left"> <input type="hidden" name="command" value="quayTrai"> <button style="font-size: 40"> quayTrai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:right"> <input type="hidden" name="command" value="quayPhai"> <button style="font-size: 40"> quayPhai</button></form>
+<form action="http://192.168.43.242/body" method="post" style="  text-align:center"> <input type="hidden" name="command" value="tien"> <button style="font-size: 40"> tien</button></form><form action="http://192.168.43.242/body" method="post" style=" text-align:left; margin=25%"> <input type="hidden" name="command" value="trai"> <button style="font-size: 40"> trai</button></form><form action="http://192.168.43.242/body" method="post" style=" text-align:right"> <input type="hidden" name="command" value="phai"> <button style="font-size: 40"> phai</button></form><form action="http://192.168.43.242/body" method="post" style=" text-align:center"> <input type="hidden" name="command" value="lui"> <button style="font-size: 40"> lui</button></form><br><form action="http://192.168.43.242/body" method="post" style=" text-align:center"> <input type="hidden" name="command" value="dung"> <button style="font-size: 40"> dung</button></form><form action="http://192.168.43.242/body" method="post" style=" text-align:left"> <input type="hidden" name="command" value="quayTrai"> <button style="font-size: 40"> quayTrai</button></form><form action="http://192.168.43.242/body" method="post" style=" text-align:right"> <input type="hidden" name="command" value="quayPhai"> <button style="font-size: 40"> quayPhai</button></form>
 </body>
 </html>
 )=====";
@@ -45,6 +46,56 @@ void handleBody() { //Handler for the body path
       server.send(200, "text/html", message+html);
       Serial.println(message);
 }
+
+/*011 tien 
+110 lui 
+101 quaytrai
+100 quayphai
+010 dung
+001 tulai*/
+
+
+void tien(){
+        digitalWrite(pinC1,LOW);
+        digitalWrite(pinC2,HIGH);
+        digitalWrite(pinC3,HIGH);
+    }
+void lui(){
+        digitalWrite(pinC1,HIGH);
+        digitalWrite(pinC2,HIGH);
+        digitalWrite(pinC3,LOW);
+    }
+void quayTrai(){
+        digitalWrite(pinC1,HIGH);
+        digitalWrite(pinC2,LOW);
+        digitalWrite(pinC3,HIGH);
+    }
+void quayPhai(){
+        digitalWrite(pinC1,HIGH);
+        digitalWrite(pinC2,LOW);
+        digitalWrite(pinC3,LOW);
+    }
+
+void dung(){
+        digitalWrite(pinC1,LOW);
+        digitalWrite(pinC2,HIGH);
+        digitalWrite(pinC3,LOW);
+    }
+
+void trai(){
+        quayTrai();
+        delay(turnGap);
+        dung();
+    }
+void phai(){
+        quayPhai();
+        delay(turnGap);
+        dung();
+    }
+
+
+
+ 
 void setup() {
     pinMode(pinC1,OUTPUT);    
     pinMode(pinC2,OUTPUT);    
@@ -76,56 +127,37 @@ void loop() {
     server.handleClient(); //Handling of incoming requests
     if(command=="command=tien"){
       Serial.println("tien");
-        digitalWrite(pinC1,LOW);
-            digitalWrite(pinC2,HIGH);
-            digitalWrite(pinC3,HIGH);
+       tien();
     }
      if(command=="command=lui"){
-             Serial.println("lui");
-
-            digitalWrite(pinC1,HIGH);
-            digitalWrite(pinC2,HIGH);
-            digitalWrite(pinC3,LOW);
+           Serial.println("lui");
+           lui();
         }
      if(command=="command=trai"){
 
       Serial.println("trai");
-            digitalWrite(pinC1,HIGH);
-            digitalWrite(pinC2,LOW);
-            digitalWrite(pinC3,HIGH);
+           trai();
         }
      if(command=="command=phai"){
       Serial.println("phai");
-
-            digitalWrite(pinC1,HIGH);
-            digitalWrite(pinC2,LOW);
-            digitalWrite(pinC3,LOW);
+        phai();
         }
      if(command=="command=quayTrai"){
       Serial.println("quayTrai");
 
-            // digitalWrite(pinC1,LOW);
-            // digitalWrite(pinC2,HIGH);
-            // digitalWrite(pinC3,HIGH);
+       quayTrai();
         }
      if(command=="command=quayPhai"){
       Serial.println("quayPhai");
 
-            digitalWrite(pinC1,LOW);
-            digitalWrite(pinC2,HIGH);
-            digitalWrite(pinC3,LOW);
+          quayPhai();
         }
      if(command=="command=dung"){
       Serial.println("dung");
 
-            digitalWrite(pinC1,LOW);
-            digitalWrite(pinC2,HIGH);
-            digitalWrite(pinC3,LOW);
+         dung();
         }
             delay(gap);
-            digitalWrite(pinC1,LOW);
-            digitalWrite(pinC2,HIGH);
-            digitalWrite(pinC3,LOW);
  
 }
  
