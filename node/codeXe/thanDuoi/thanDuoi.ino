@@ -1,4 +1,3 @@
-#include <Servo.h>
 #include "MotorDriver.h"
 
 /*011 tien 
@@ -41,7 +40,7 @@ void tien(MotorDriver m){
    
 
 }
-void quayPhai(MotorDriver m){
+void quayTrai(MotorDriver m){
    m.motor(1,FORWARD,speed);
    m.motor(2,FORWARD,speed);  
    m.motor(3,BACKWARD,speed);
@@ -49,7 +48,7 @@ void quayPhai(MotorDriver m){
 
 }
     
-void quayTrai(MotorDriver m){
+void quayPhai(MotorDriver m){
    m.motor(1,BACKWARD,speed);
    m.motor(2,BACKWARD,speed);  
    m.motor(3,FORWARD,speed);

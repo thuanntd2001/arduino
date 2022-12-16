@@ -4,7 +4,7 @@
 int pinC1=14;
 int pinC2=12;
 int pinC3=13;
-int gap=300; 
+int gap=50; 
 ESP8266WebServer server(80);
  
  const char* ssid = "KYV41";
@@ -12,7 +12,7 @@ ESP8266WebServer server(80);
 
 // const char* ssid = "NOKIA";
 // const char* password =  "123456789";
-String command="command=dung";
+String command="";
 const char html[] = R"=====(
 <!DOCTYPE html>
 <html>
@@ -68,7 +68,7 @@ void setup() {
  
     server.begin(); //Start the server
     Serial.println("Server listening");
- 
+ dung();
 }
  
 void loop() {
