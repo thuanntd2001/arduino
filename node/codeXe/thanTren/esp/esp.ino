@@ -9,10 +9,10 @@ int pinC3=13;
 int gap=10; 
 int turnGap=360; 
 int cirGap=40;
-int trai;
-int phai;
-int giua;
-safe = 15;
+int trai=-2;
+int phai=-2;
+int giua=-2;
+int safe = 15;
 DynamicJsonDocument doc(1024);
 
 ESP8266WebServer server(80);
@@ -100,11 +100,11 @@ void dung(){
         digitalWrite(pinC3,LOW);
     }
 
-void trai(){
+void reTrai(){
         quayTrai();
         delay(turnGap);
 command="command=dung" ;   }
-void phai(){
+void rePhai(){
         quayPhai();
         delay(turnGap);
 command="command=dung";    }
@@ -125,34 +125,23 @@ void tulai(){
         if(trai>safe && giua>safe && phai>safe){
           tien();
         }
-        else if(trai<=safe && giua<=safe && phai<=safe){
+                      
+        else if(trai > safe)    {
+              reTrai;
+              }
+        else if(phai > safe)    {
+              rePhai;
+              }
+        else {
           quayTrai();
             delay(random(3000));
-            quayPhaiThat();            
+            rePhai();            
                     
-        }  
-        else if(giua<=safe){
-                      
-            if(trai > safe)    {
-              quayTraiThat();
-              }
-              if(phai > safe)    {
-              quayPhaiThat();
-              }
-        }   
-        else if(trai<=safe){    
-              quayPhaiThat();
-              tien();
-            
-        }
-        else if(Phai<=safe){
-                            
-              quayPhaiThat();
-              tien();        
-              }
+        }          
+ 
 }         
-             
-  
+ String message = "";
+
 
  
 void setup() {
@@ -195,11 +184,11 @@ void loop() {
      if(command=="command=trai"){
 
       Serial.println("trai");
-           trai();
+           reTrai();
         }
      if(command=="command=phai"){
       Serial.println("phai");
-        phai();
+        rePhai();
         }
      if(command=="command=quayTrai"){
       Serial.println("quayTrai");
@@ -224,16 +213,10 @@ void loop() {
       // Sending the request
     doc["type"] = "request";
     serializeJson(doc,Serial);
-    // Reading the response
-    boolean messageReady = false;
-    String message = "";
-    while(messageReady == false) { // blocking but that's ok
+
       if(Serial.available()) {
         message = Serial.readString();
-        messageReady = true;
-      }
-    }
-      // Attempt to deserialize the JSON-formatted message
+           // Attempt to deserialize the JSON-formatted message
     DeserializationError error = deserializeJson(doc,message);
     if(error) {
       Serial.print(F("deserializeJson() failed: "));
@@ -243,5 +226,7 @@ void loop() {
     trai = doc["trai"];
     phai = doc["phai"];
     giua = doc["giua"];  
+      }
+      
 }
  

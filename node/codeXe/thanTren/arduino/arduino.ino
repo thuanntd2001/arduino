@@ -116,7 +116,16 @@ void setup() {
  
 void loop() {
  
-
+ trai= doDistanceTrai();
+    giua= doDistanceGiua();
+    phai= doDistancePhai();
+    
+      //   Serial.print("trai");
+      // Serial.println(trai);
+      // Serial.print("giua");
+      // Serial.println(giua);
+      // Serial.print("phai");
+      // Serial.println(phai);
   // Monitor serial communication
   while(Serial.available()) {
     message = Serial.readString();
@@ -135,16 +144,8 @@ void loop() {
       return;
     }
     if(doc["type"] == "request") {
-    trai= doDistanceTrai();
-    giua= doDistanceGiua();
-    phai= doDistancePhai();
-    
-        Serial.print("trai");
-      Serial.println(trai);
-      Serial.print("giua");
-      Serial.println(giua);
-      Serial.print("phai");
-      Serial.println(phai);
+
+      Serial.println("ok");
 
       doc["type"] = "response";
       // Get data from analog sensors
