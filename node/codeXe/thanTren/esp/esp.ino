@@ -46,6 +46,28 @@ void handleBody() { //Handler for the body path
             return;
  
       }
+      // Sending the request
+    doc["type"] = "request";
+    boolean messageReady = false;
+    String message = "";
+    serializeJson(doc,Serial);
+    while(messageReady == false) { // blocking but that's ok
+    if(Serial.available()) {
+      message = Serial.readString();
+      messageReady = true;
+    }
+  }
+           // Attempt to deserialize the JSON-formatted message
+    DeserializationError error = deserializeJson(doc,message);
+    if(error) {
+      Serial.print(F("deserializeJson() failed: "));
+      Serial.println(error.c_str());
+      return;
+    }
+    trai = doc["trai"];
+    phai = doc["phai"];
+    giua = doc["giua"];  
+      }
            String message = "Lenh da nhan:\n";
              command=server.arg("plain");
              message += server.arg("plain");
@@ -210,23 +232,7 @@ void loop() {
 
          //tulai();
         }
-      // Sending the request
-    doc["type"] = "request";
-    serializeJson(doc,Serial);
 
-      if(Serial.available()) {
-        message = Serial.readString();
-           // Attempt to deserialize the JSON-formatted message
-    DeserializationError error = deserializeJson(doc,message);
-    if(error) {
-      Serial.print(F("deserializeJson() failed: "));
-      Serial.println(error.c_str());
-      return;
-    }
-    trai = doc["trai"];
-    phai = doc["phai"];
-    giua = doc["giua"];  
-      }
       
 }
  
