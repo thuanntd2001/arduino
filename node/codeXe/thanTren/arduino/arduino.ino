@@ -6,7 +6,7 @@ const int echoGiua = 10;     // chân echo của HC-SR04
 const int trigTrai = 7;     // chân trig của HC-SR04
 const int echoTrai = 8;     // chân echo của HC-SR04
 
-const int pw=13
+const int pw=13;
 
 const byte LEFT = 1;
 const byte RIGHT = 0;
