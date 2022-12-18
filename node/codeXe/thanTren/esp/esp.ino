@@ -6,13 +6,18 @@ int pinC1=14;
 int pinC2=12;
 int pinC3=13;
 
+
+int pinTrai=4;
+int pinGiua=5;
+int pinPhai=16;
+
 int gap=10; 
 int turnGap=360; 
 int cirGap=40;
 int trai=-2;
 int phai=-2;
 int giua=-2;
-int safe = 15;
+
 DynamicJsonDocument doc(1024);
 
 ESP8266WebServer server(80);
@@ -24,20 +29,12 @@ ESP8266WebServer server(80);
 // const char* password =  "123456789";
 String command="";
 const char html[] = R"=====(
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<style>
-
-</style>
-<body>
-<form action="http://192.168.43.242/body" method="post" style="  text-align:center"> <input type="hidden" name="command" value="tien"> <button style="font-size: 40"> tien</button></form><form action="http://192.168.43.242/body" method="post" style=" text-align:left; margin=25%"> <input type="hidden" name="command" value="trai"> <button style="font-size: 40"> trai</button></form><form action="http://192.168.43.242/body" method="post" style=" text-align:right"> <input type="hidden" name="command" value="phai"> <button style="font-size: 40"> phai</button></form><form action="http://192.168.43.242/body" method="post" style=" text-align:center"> <input type="hidden" name="command" value="lui"> <button style="font-size: 40"> lui</button></form><br><form action="http://192.168.43.242/body" method="post" style=" text-align:center"> <input type="hidden" name="command" value="dung"> <button style="font-size: 40"> dung</button></form><form action="http://192.168.43.242/body" method="post" style=" text-align:left"> <input type="hidden" name="command" value="quayTrai"> <button style="font-size: 40"> quayTrai</button></form><form action="http://192.168.43.242/body" method="post" style=" text-align:right"> <input type="hidden" name="command" value="quayPhai"> <button style="font-size: 40"> quayPhai</button></form>
-</body>
-</html>
+<form action="http://192.168.43.242/body" method="post" style=" color:blue;text-align:center"> <input type="hidden" name="command" value="tien"> <button style="font-size: 40"> tien</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:left; margin=25%"> <input type="hidden" name="command" value="trai"> <button style="font-size: 40"> trai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:right"> <input type="hidden" name="command" value="phai"> <button style="font-size: 40"> phai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:center"> <input type="hidden" name="command" value="lui"> <button style="font-size: 40"> lui</button></form><br><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:center"> <input type="hidden" name="command" value="dung"> <button style="font-size: 40"> dung</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:left"> <input type="hidden" name="command" value="quayTrai"> <button style="font-size: 40"> quayTrai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:right"> <input type="hidden" name="command" value="quayPhai"> <button style="font-size: 40"> quayPhai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:right"> <input type="hidden" name="command" value="tulai"> <button style="font-size: 40"> tulai</button></form>
 )=====";
 void handleBody() { //Handler for the body path
+     trai= digitalRead(pinTrai); // 1 ok 0 co vat can
+  phai= digitalRead(pinPhai);
+  giua= digitalRead(pinGiua);
 
       if (server.hasArg("plain")== false){ //Check if body received
             char strRep[2000];
@@ -46,29 +43,31 @@ void handleBody() { //Handler for the body path
             return;
  
       }
-      // Sending the request
-    doc["type"] = "request";
-    boolean messageReady = false;
-    String message = "";
-    serializeJson(doc,Serial);
-    while(messageReady == false) { // blocking but that's ok
-    if(Serial.available()) {
-      message = Serial.readString();
-      messageReady = true;
-    }
-  }
-           // Attempt to deserialize the JSON-formatted message
-    DeserializationError error = deserializeJson(doc,message);
-    if(error) {
-      Serial.print(F("deserializeJson() failed: "));
-      Serial.println(error.c_str());
-      return;
-    }
-    trai = doc["trai"];
-    phai = doc["phai"];
-    giua = doc["giua"];  
-      }
-           String message = "Lenh da nhan:\n";
+  //     // Sending the request
+  //   doc["type"] = "request";
+  //   boolean messageReady = false;
+  //   serializeJson(doc,Serial);
+  //   while(messageReady == false) { // blocking but that's ok
+  //   if(Serial.available()) {
+  //     message1 = Serial.readString();
+  //     messageReady = true;
+  //   }
+  // }
+  //          // Attempt to deserialize the JSON-formatted message
+  //   DeserializationError error = deserializeJson(doc,message1);
+  //   if(error) {
+  //     Serial.print(F("deserializeJson() failed: "));
+  //     Serial.println(error.c_str());
+      
+  //   }
+  //   else{ 
+  //     trai = doc["trai"];
+  //   phai = doc["phai"];
+  //   giua = doc["giua"];  
+
+  //   }
+   
+    String message = "Lenh da nhan:\n";
              command=server.arg("plain");
              message += server.arg("plain");
              message += "\n";
@@ -85,7 +84,9 @@ void handleBody() { //Handler for the body path
  
       server.send(200, "text/html", message+html);
       Serial.println(message);
-}
+      }
+           
+
 
 /*011 tien 
 110 lui 
@@ -143,21 +144,35 @@ void quayTraiThat(){
         dung();
         delay(cirGap);
     }
-void tulai(){
-        if(trai>safe && giua>safe && phai>safe){
+void tulai(){ 
+  
+
+ trai= digitalRead(pinTrai); // 1 ok 0 co vat can
+  phai= digitalRead(pinPhai);
+  giua= digitalRead(pinGiua);
+
+        if(trai>0 && giua>0 && phai>0){
           tien();
+              command="command=tulai";
+
         }
                       
-        else if(trai > safe)    {
-              reTrai;
+        else if(trai > 0)    {
+
+              reTrai();
+              command="command=tulai";
               }
-        else if(phai > safe)    {
-              rePhai;
+        else if(phai > 0)    {
+              rePhai();
+              command="command=tulai";
+
               }
         else {
           quayTrai();
             delay(random(3000));
-            rePhai();            
+          
+              command="command=tulai";
+
                     
         }          
  
@@ -170,6 +185,10 @@ void setup() {
     pinMode(pinC1,OUTPUT);    
     pinMode(pinC2,OUTPUT);    
     pinMode(pinC3,OUTPUT);    
+
+    pinMode(pinTrai,INPUT);    
+    pinMode(pinPhai,INPUT);    
+    pinMode(pinGiua,INPUT);   
 
     Serial.begin(9600);
     WiFi.begin(ssid, password);  //Connect to the WiFi network
@@ -195,6 +214,8 @@ void setup() {
 void loop() {
 
     server.handleClient(); //Handling of incoming requests
+     
+    
     if(command=="command=tien"){
       Serial.println("tien");
        tien();
@@ -230,7 +251,7 @@ void loop() {
     if(command=="command=tulai"){
       Serial.println("tulai");
 
-         //tulai();
+         tulai();
         }
 
       

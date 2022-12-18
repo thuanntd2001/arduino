@@ -10,7 +10,9 @@ const int trigGiua = A3;     // chân trig của HC-SR04
 const int echoGiua = A2;     // chân echo của HC-SR04
 const int trigPhai = A1;     // chân trig của HC-SR04
 const int echoPhai = A0;     // chân echo của HC-SR04
-
+int pinTrai=5;
+int pinGiua=6;
+int pinPhai=7;
 int trai;
 int giua;
 int phai;
@@ -18,14 +20,7 @@ int pw3=13;
 int pw2=8;
 int pw1=2;
 
-int gap=100; 
-int turnGap=360; 
- 
- const char* ssid = "KYV41";
- const char* password =  "kamomechan";
-
-// const char* ssid = "NOKIA";
-// const char* password =  "123456789";
+int safe=15;
 
 
 int doDistanceTrai(){
@@ -96,7 +91,9 @@ int doDistancePhai(){
 
  
 void setup() {
-
+pinMode(pinTrai,OUTPUT);   // chân trig sẽ phát tín hiệu
+    pinMode(pinGiua,OUTPUT);   // chân trig sẽ phát tín hiệu
+    pinMode(pinPhai,OUTPUT);   // chân trig sẽ phát tín hiệu
     pinMode(trigTrai,OUTPUT);   // chân trig sẽ phát tín hiệu
     pinMode(trigGiua,OUTPUT);   // chân trig sẽ phát tín hiệu
     pinMode(trigPhai,OUTPUT);   // chân trig sẽ phát tín hiệu
@@ -120,42 +117,54 @@ void loop() {
     giua= doDistanceGiua();
     phai= doDistancePhai();
     
-      //   Serial.print("trai");
-      // Serial.println(trai);
-      // Serial.print("giua");
-      // Serial.println(giua);
-      // Serial.print("phai");
-      // Serial.println(phai);
-  // Monitor serial communication
-  while(Serial.available()) {
-    message = Serial.readString();
-    messageReady = true;
-  }
-  // Only process message if there's one
-  if(messageReady) {
-    // The only messages we'll parse will be formatted in JSON
-    DynamicJsonDocument doc(1024); // ArduinoJson version 6+
-    // Attempt to deserialize the message
-    DeserializationError error = deserializeJson(doc,message);
-    if(error) {
-      Serial.print(F("deserializeJson() failed: "));
-      Serial.println(error.c_str());
-      messageReady = false;
-      return;
-    }
-    if(doc["type"] == "request") {
+        Serial.print("trai");
+      Serial.println(trai);
+      Serial.print("giua");
+      Serial.println(giua);
+      Serial.print("phai");
+      Serial.println(phai);
+if (trai > safe && trai <400) 
+digitalWrite(pinTrai,1);
+else digitalWrite(pinTrai,0);
 
-      Serial.println("ok");
+if (giua > safe&& giua <400)
+digitalWrite(pinGiua,1);
+else digitalWrite(pinGiua,0);
 
-      doc["type"] = "response";
-      // Get data from analog sensors
-      doc["trai"] = trai;
-      doc["phai"] = phai;
-      doc["giua"] = giua;
-      serializeJson(doc,Serial);
-    }
-    messageReady = false;
-  }
+if (phai > safe && phai <400)
+digitalWrite(pinPhai,1);
+else digitalWrite(pinPhai,0);
+delay(100);
+  // // Monitor serial communication
+  // while(Serial.available()) {
+  //   message = Serial.readString();
+  //   messageReady = true;
+  // }
+  // // Only process message if there's one
+  // if(messageReady) {
+  //   // The only messages we'll parse will be formatted in JSON
+  //   DynamicJsonDocument doc(1024); // ArduinoJson version 6+
+  //   // Attempt to deserialize the message
+  //   DeserializationError error = deserializeJson(doc,message);
+  //   if(error) {
+  //     Serial.print(F("deserializeJson() failed: "));
+  //     Serial.println(error.c_str());
+  //     messageReady = false;
+  //     return;
+  //   }
+  //   if(doc["type"] == "request") {
+
+  //     Serial.println("ok");
+
+  //     doc["type"] = "response";
+  //     // Get data from analog sensors
+  //     doc["trai"] = trai;
+  //     doc["phai"] = phai;
+  //     doc["giua"] = giua;
+  //     serializeJson(doc,Serial);
+  //   }
+  //   messageReady = false;
+  // }
  
 }
  
