@@ -1,5 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include <ArduinoJson.h>
 
 int pinC1=14;
 int pinC2=12;
@@ -8,6 +9,11 @@ int pinC3=13;
 int gap=10; 
 int turnGap=360; 
 int cirGap=40;
+int trai;
+int phai;
+int giua;
+safe = 15;
+DynamicJsonDocument doc(1024);
 
 ESP8266WebServer server(80);
  
@@ -32,7 +38,6 @@ const char html[] = R"=====(
 </html>
 )=====";
 void handleBody() { //Handler for the body path
-      
 
       if (server.hasArg("plain")== false){ //Check if body received
             char strRep[2000];
@@ -41,10 +46,20 @@ void handleBody() { //Handler for the body path
             return;
  
       }
-           String message = "Body received:\n";
+           String message = "Lenh da nhan:\n";
              command=server.arg("plain");
              message += server.arg("plain");
              message += "\n";
+              message += "trai: ";
+              message += trai;
+              message += " cm\n";
+              message += "giua: ";
+              message += giua;
+              message += " cm\n";
+              message += "phai: ";
+              message += phai;
+              message += " cm\n";
+
  
       server.send(200, "text/html", message+html);
       Serial.println(message);
@@ -106,7 +121,38 @@ void quayTraiThat(){
         dung();
         delay(cirGap);
     }
-
+void tulai(){
+        if(trai>safe && giua>safe && phai>safe){
+          tien();
+        }
+        else if(trai<=safe && giua<=safe && phai<=safe){
+          quayTrai();
+            delay(random(3000));
+            quayPhaiThat();            
+                    
+        }  
+        else if(giua<=safe){
+                      
+            if(trai > safe)    {
+              quayTraiThat();
+              }
+              if(phai > safe)    {
+              quayPhaiThat();
+              }
+        }   
+        else if(trai<=safe){    
+              quayPhaiThat();
+              tien();
+            
+        }
+        else if(Phai<=safe){
+                            
+              quayPhaiThat();
+              tien();        
+              }
+}         
+             
+  
 
  
 void setup() {
@@ -136,7 +182,7 @@ void setup() {
 }
  
 void loop() {
- 
+
     server.handleClient(); //Handling of incoming requests
     if(command=="command=tien"){
       Serial.println("tien");
@@ -170,7 +216,32 @@ void loop() {
 
          dung();
         }
-            delay(gap);
- 
+    if(command=="command=tulai"){
+      Serial.println("tulai");
+
+         //tulai();
+        }
+      // Sending the request
+    doc["type"] = "request";
+    serializeJson(doc,Serial);
+    // Reading the response
+    boolean messageReady = false;
+    String message = "";
+    while(messageReady == false) { // blocking but that's ok
+      if(Serial.available()) {
+        message = Serial.readString();
+        messageReady = true;
+      }
+    }
+      // Attempt to deserialize the JSON-formatted message
+    DeserializationError error = deserializeJson(doc,message);
+    if(error) {
+      Serial.print(F("deserializeJson() failed: "));
+      Serial.println(error.c_str());
+      return;
+    }
+    trai = doc["trai"];
+    phai = doc["phai"];
+    giua = doc["giua"];  
 }
  
