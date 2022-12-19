@@ -1,258 +1,133 @@
+/*
+    This sketch establishes a TCP connection to a "quote of the day" service.
+    It sends a "hello" message, and then prints received data.
+*/
+
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
 #include <ArduinoJson.h>
 
-int pinC1=14;
-int pinC2=12;
-int pinC3=13;
 
+#ifndef STASSID
+#define STASSID "KYV41"
+#define STAPSK  "kamomechan"
+#endif
 
-int pinTrai=4;
-int pinGiua=5;
-int pinPhai=16;
+const char* ssid     = STASSID;
+const char* password = STAPSK;
 
-int gap=10; 
-int turnGap=360; 
-int cirGap=40;
-int trai=-2;
-int phai=-2;
-int giua=-2;
+const char* host = "api.thingspeak.com";
+const uint16_t port = 80;
 
-DynamicJsonDocument doc(1024);
+String API = "255XXW7UALLLYJBV";
+String field = "field1";
+int trai;
+int phai;
+int giua;
+ DynamicJsonDocument doc(1024);
 
-ESP8266WebServer server(80);
- 
- const char* ssid = "KYV41";
- const char* password =  "kamomechan";
-
-// const char* ssid = "NOKIA";
-// const char* password =  "123456789";
-
-String command="";
-
-const char html[] = R"=====(
-<form action="http://192.168.43.242/body" method="post" style=" color:blue;text-align:center"> <input type="hidden" name="command" value="tien"> <button style="font-size: 40"> tien</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:left; margin=25%"> <input type="hidden" name="command" value="trai"> <button style="font-size: 40"> trai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:right"> <input type="hidden" name="command" value="phai"> <button style="font-size: 40"> phai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:center"> <input type="hidden" name="command" value="lui"> <button style="font-size: 40"> lui</button></form><br><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:center"> <input type="hidden" name="command" value="dung"> <button style="font-size: 40"> dung</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:left"> <input type="hidden" name="command" value="quayTrai"> <button style="font-size: 40"> quayTrai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:right"> <input type="hidden" name="command" value="quayPhai"> <button style="font-size: 40"> quayPhai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:right"> <input type="hidden" name="command" value="tulai"> <button style="font-size: 40"> tulai</button></form>
-)=====";
-void handleBody() { //Handler for the body path
-     trai= digitalRead(pinTrai); // 1 ok 0 co vat can
-  phai= digitalRead(pinPhai);
-  giua= digitalRead(pinGiua);
-
-      if (server.hasArg("plain")== false){ //Check if body received
-            char strRep[2000];
-            strcat(strRep, html);
-            server.send(200, "text/html", strRep);
-            return;
- 
-      }
-  //     // Sending the request
-  //   doc["type"] = "request";
-  //   boolean messageReady = false;
-  //   serializeJson(doc,Serial);
-  //   while(messageReady == false) { // blocking but that's ok
-  //   if(Serial.available()) {
-  //     message1 = Serial.readString();
-  //     messageReady = true;
-  //   }
-  // }
-  //          // Attempt to deserialize the JSON-formatted message
-  //   DeserializationError error = deserializeJson(doc,message1);
-  //   if(error) {
-  //     Serial.print(F("deserializeJson() failed: "));
-  //     Serial.println(error.c_str());
-      
-  //   }
-  //   else{ 
-  //     trai = doc["trai"];
-  //   phai = doc["phai"];
-  //   giua = doc["giua"];  
-
-  //   }
-   
-    String message = "Lenh da nhan:\n";
-             command=server.arg("plain");
-             message += server.arg("plain");
-             message += "\n";
-              message += "trai: ";
-              message += trai;
-              message += "giua: ";
-              message += giua;
-              message += "phai: ";
-              message += phai;
-
- 
-      server.send(200, "text/html", message+html);
-      Serial.println(message);
-      }
-           
-
-
-/*011 tien 
-110 lui 
-101 quaytrai
-100 quayphai
-010 dung
-001 tulai*/
-
-
-void tien(){
-        digitalWrite(pinC1,LOW);
-        digitalWrite(pinC2,HIGH);
-        digitalWrite(pinC3,HIGH);
-    }
-void lui(){
-        digitalWrite(pinC1,HIGH);
-        digitalWrite(pinC2,HIGH);
-        digitalWrite(pinC3,LOW);
-    }
-void quayTrai(){
-        digitalWrite(pinC1,HIGH);
-        digitalWrite(pinC2,LOW);
-        digitalWrite(pinC3,HIGH);
-    }
-void quayPhai(){
-        digitalWrite(pinC1,HIGH);
-        digitalWrite(pinC2,LOW);
-        digitalWrite(pinC3,LOW);
-    }
-
-void dung(){
-        digitalWrite(pinC1,LOW);
-        digitalWrite(pinC2,HIGH);
-        digitalWrite(pinC3,LOW);
-    }
-
-void reTrai(){
-        quayTrai();
-        delay(turnGap);
-command="command=dung" ;   }
-void rePhai(){
-        quayPhai();
-        delay(turnGap);
-command="command=dung";    }
-
-void quayPhaiThat(){
-        quayPhai();
-        delay(cirGap);
-        dung();
-        delay(cirGap);
-    }
-void quayTraiThat(){
-        quayTrai();
-        delay(cirGap);
-        dung();
-        delay(cirGap);
-    }
-void tulai(){ 
-  
-
- trai= digitalRead(pinTrai); // 1 ok 0 co vat can
-  phai= digitalRead(pinPhai);
-  giua= digitalRead(pinGiua);
-
-        if(trai>0 && giua>0 && phai>0){
-          tien();
-              command="command=tulai";
-
-        }
-                      
-        else if(trai > 0)    {
-
-              reTrai();
-              command="command=tulai";
-              }
-        else if(phai > 0)    {
-              rePhai();
-              command="command=tulai";
-
-              }
-        else {
-          quayTrai();
-          delay(random(2400));
-          reTrai();
-
-              command="command=tulai";
-
-                    
-        }          
- 
-}         
-
-
- 
 void setup() {
-    pinMode(pinC1,OUTPUT);    
-    pinMode(pinC2,OUTPUT);    
-    pinMode(pinC3,OUTPUT);    
+  Serial.begin(115200);
 
-    pinMode(pinTrai,INPUT);    
-    pinMode(pinPhai,INPUT);    
-    pinMode(pinGiua,INPUT);   
+  // We start by connecting to a WiFi network
 
-    Serial.begin(9600);
-    WiFi.begin(ssid, password);  //Connect to the WiFi network
- 
-    while (WiFi.status() != WL_CONNECTED) {  //Wait for connection
- 
-        delay(500);
-        Serial.println("Waiting to connect...");
- 
-    }
-     Serial.print(html);
+  Serial.println();
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
 
-    Serial.print("IP address: ");
-    Serial.println(WiFi.localIP());  //Print the local IP
- 
-    server.on("/body", handleBody); //Associate the handler function to the path
- 
-    server.begin(); //Start the server
-    Serial.println("Server listening");
- dung();
+  /* Explicitly set the ESP8266 to be a WiFi-client, otherwise, it by default,
+     would try to act as both a client and an access-point and could cause
+     network-issues with your other WiFi-devices on your WiFi-network. */
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
 }
- 
+
 void loop() {
+  static bool wait = false;
 
-    server.handleClient(); //Handling of incoming requests
-     
-    
-    if(command=="command=tien"){
-      Serial.println("tien");
-       tien();
+  Serial.print("connecting to ");
+  Serial.print(host);
+  Serial.print(':');
+  Serial.println(port);
+
+  // Use WiFiClient class to create TCP connections
+  WiFiClient client;
+  if (!client.connect(host, port)) {
+    Serial.println("connection failed");
+    delay(5000);
+    return;
+  }
+
+  // This will send a string to the server
+  Serial.println("sending data to server");
+  // valSensor = doDistance(); //lay khoang cach tu cam bien
+  valSensor= random(200);
+ // String urlUp = "GET /update?api_key="+ API +"&"+ field +"="+String(valSensor);
+  // Serial.println(valSensor);
+  // Serial.print(urlUp);
+  // Serial.print(",");
+  // Serial.println(urlUp.length());
+  
+    Serial.println("valSensor la: ");
+   Serial.println(valSensor);
+
+
+  if (client.connected()) {
+      String data_to_send = API;
+      data_to_send += "&field1="; 
+      data_to_send += valSensor;
+      // data_to_send += "&field2=";
+      // data_to_send += t;
+      data_to_send += "\r\n\r\n";
+
+      client.print("POST /update HTTP/1.1\n");
+      client.print("Host: api.thingspeak.com\n");
+      client.print("Connection: close\n");
+      client.print("X-THINGSPEAKAPIKEY: " + API + "\n");
+      client.print("Content-Type: application/x-www-form-urlencoded\n");
+      client.print("Content-Length: ");
+      client.print(data_to_send.length());
+      client.print("\n\n");
+      client.print(data_to_send);
+         
+  }
+
+  // wait for data to be available
+  unsigned long timeout = millis();
+  while (client.available() == 0) {
+    if (millis() - timeout > 5000) {
+      Serial.println(">>> Client Timeout !");
+      client.stop();
+      delay(60000);
+      return;
     }
-     if(command=="command=lui"){
-           Serial.println("lui");
-           lui();
-        }
-     if(command=="command=trai"){
+  }
 
-      Serial.println("trai");
-           reTrai();
-        }
-     if(command=="command=phai"){
-      Serial.println("phai");
-        rePhai();
-        }
-     if(command=="command=quayTrai"){
-      Serial.println("quayTrai");
+  // Read all the lines of the reply from server and print them to Serial
+  Serial.println("receiving from remote server");
+  // not testing 'client.connected()' since we do not need to send data here
+  while (client.available()) {
+    char ch = static_cast<char>(client.read());
+    Serial.print(ch);
+  }
 
-       quayTraiThat();
-        }
-     if(command=="command=quayPhai"){
-      Serial.println("quayPhai");
+  // Close the connection
+  Serial.println();
+  Serial.println("closing connection");
+  client.stop();
 
-          quayPhaiThat();
-        }
-     if(command=="command=dung"){
-      Serial.println("dung");
-
-         dung();
-        }
-    if(command=="command=tulai"){
-      Serial.println("tulai");
-
-         tulai();
-        }
-
-      
+  if (wait) {
+    delay(3000); // execute once every 30s, don't flood remote service
+  }
+  wait = true;
 }
- 

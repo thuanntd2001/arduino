@@ -106,7 +106,7 @@ pinMode(pinTrai,OUTPUT);   // chân trig sẽ phát tín hiệu
     pinMode(pw2,OUTPUT);   // chân trig sẽ phát tín hiệu
     pinMode(pw3,OUTPUT);   // chân trig sẽ phát tín hiệu
 
-    Serial.begin(9600);
+    Serial.begin(115200);
     digitalWrite(pw1,1);
     digitalWrite(pw2,1);
     digitalWrite(pw3,1);
