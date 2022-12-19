@@ -21,7 +21,9 @@ int pw2=8;
 int pw1=2;
 
 int safe=15;
-
+int dem=0;
+int limit=100;
+ DynamicJsonDocument doc(1024); 
 
 int doDistanceTrai(){
       unsigned int duration; // biến đo thời gian
@@ -110,14 +112,14 @@ pinMode(pinTrai,OUTPUT);   // chân trig sẽ phát tín hiệu
     digitalWrite(pw3,1);
 
 }
- 
+
 void loop() {
  
  trai= doDistanceTrai();
     giua= doDistanceGiua();
     phai= doDistancePhai();
     
-        Serial.print("trai");
+      Serial.print("trai");
       Serial.println(trai);
       Serial.print("giua");
       Serial.println(giua);
@@ -135,36 +137,20 @@ if (phai > safe && phai <400)
 digitalWrite(pinPhai,1);
 else digitalWrite(pinPhai,0);
 delay(100);
-  // // Monitor serial communication
-  // while(Serial.available()) {
-  //   message = Serial.readString();
-  //   messageReady = true;
-  // }
-  // // Only process message if there's one
-  // if(messageReady) {
-  //   // The only messages we'll parse will be formatted in JSON
-  //   DynamicJsonDocument doc(1024); // ArduinoJson version 6+
-  //   // Attempt to deserialize the message
-  //   DeserializationError error = deserializeJson(doc,message);
-  //   if(error) {
-  //     Serial.print(F("deserializeJson() failed: "));
-  //     Serial.println(error.c_str());
-  //     messageReady = false;
-  //     return;
-  //   }
-  //   if(doc["type"] == "request") {
+ 
+dem++;  
+    if(dem >= limit) {
 
-  //     Serial.println("ok");
 
-  //     doc["type"] = "response";
-  //     // Get data from analog sensors
-  //     doc["trai"] = trai;
-  //     doc["phai"] = phai;
-  //     doc["giua"] = giua;
-  //     serializeJson(doc,Serial);
-  //   }
-  //   messageReady = false;
-  // }
+      doc["type"] = "response";
+      // Get data from analog sensors
+      doc["trai"] = trai;
+      doc["phai"] = phai;
+      doc["giua"] = giua;
+      serializeJson(doc,Serial);
+      dem=0;
+    }
+  }
  
 }
  
