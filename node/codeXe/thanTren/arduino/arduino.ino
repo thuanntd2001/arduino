@@ -22,7 +22,7 @@ int pw1=2;
 
 int safe=17;
 int dem=0;
-int limit=100;
+int limit=50;
  DynamicJsonDocument doc(1024); 
 
 int doDistanceTrai(){
@@ -110,6 +110,7 @@ pinMode(pinTrai,OUTPUT);   // chân trig sẽ phát tín hiệu
     digitalWrite(pw1,1);
     digitalWrite(pw2,1);
     digitalWrite(pw3,1);
+    Serial.println("connected");
 
 }
 

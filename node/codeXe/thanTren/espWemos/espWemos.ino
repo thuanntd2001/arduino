@@ -19,7 +19,6 @@ const char* host = "api.thingspeak.com";
 const uint16_t port = 80;
 
 String API = "255XXW7UALLLYJBV";
-String field = "field1";
 int trai;
 int phai;
 int giua;
