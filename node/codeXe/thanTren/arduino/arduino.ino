@@ -119,12 +119,7 @@ void loop() {
     giua= doDistanceGiua();
     phai= doDistancePhai();
     
-      Serial.print("trai");
-      Serial.println(trai);
-      Serial.print("giua");
-      Serial.println(giua);
-      Serial.print("phai");
-      Serial.println(phai);
+ 
 if (trai > safe && trai <400) 
 digitalWrite(pinTrai,1);
 else digitalWrite(pinTrai,0);
@@ -152,5 +147,5 @@ dem++;
     }
   }
  
-}
+
  
