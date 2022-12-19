@@ -53,7 +53,32 @@ void setup() {
 }
 
 void loop() {
-  static bool wait = false;
+
+
+
+// Reading the response
+  boolean messageReady = false;
+  String message = "";
+  while(messageReady == false) { // blocking but that's ok
+    if(Serial.available()) {
+      message = Serial.readString();
+      messageReady = true;
+    }
+  }
+  // Attempt to deserialize the JSON-formatted message
+  DeserializationError error = deserializeJson(doc,message);
+  if(error) {                                     
+    Serial.print(F("deserializeJson() failed: "));
+    Serial.println(error.c_str());
+    return;
+  }
+  trai = doc["trai"];
+  giua = doc["giua"];
+  phai = doc["phai"];
+  // This will send a string to the server
+  Serial.println("sending data to server");
+  // valSensor = doDistance(); //lay khoang cach tu cam bien
+
 
   Serial.print("connecting to ");
   Serial.print(host);
@@ -64,30 +89,18 @@ void loop() {
   WiFiClient client;
   if (!client.connect(host, port)) {
     Serial.println("connection failed");
-    delay(5000);
     return;
   }
-
-  // This will send a string to the server
-  Serial.println("sending data to server");
-  // valSensor = doDistance(); //lay khoang cach tu cam bien
-  valSensor= random(200);
- // String urlUp = "GET /update?api_key="+ API +"&"+ field +"="+String(valSensor);
-  // Serial.println(valSensor);
-  // Serial.print(urlUp);
-  // Serial.print(",");
-  // Serial.println(urlUp.length());
-  
-    Serial.println("valSensor la: ");
-   Serial.println(valSensor);
 
 
   if (client.connected()) {
       String data_to_send = API;
       data_to_send += "&field1="; 
-      data_to_send += valSensor;
-      // data_to_send += "&field2=";
-      // data_to_send += t;
+      data_to_send += trai;
+      data_to_send += "&field3=";
+      data_to_send += phai;
+      data_to_send += "&field2=";
+      data_to_send += giua;
       data_to_send += "\r\n\r\n";
 
       client.print("POST /update HTTP/1.1\n");
@@ -126,8 +139,5 @@ void loop() {
   Serial.println("closing connection");
   client.stop();
 
-  if (wait) {
-    delay(3000); // execute once every 30s, don't flood remote service
-  }
-  wait = true;
+ 
 }

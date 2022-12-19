@@ -20,7 +20,7 @@ int pw3=13;
 int pw2=8;
 int pw1=2;
 
-int safe=15;
+int safe=17;
 int dem=0;
 int limit=100;
  DynamicJsonDocument doc(1024); 
