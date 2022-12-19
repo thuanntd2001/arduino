@@ -74,7 +74,7 @@ void handleIndex()
   }
   // Attempt to deserialize the JSON-formatted message
   DeserializationError error = deserializeJson(doc,message);
-  if(error) {
+  if(error) {                                     
     Serial.print(F("deserializeJson() failed: "));
     Serial.println(error.c_str());
     return;

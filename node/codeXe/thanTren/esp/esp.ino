@@ -27,7 +27,9 @@ ESP8266WebServer server(80);
 
 // const char* ssid = "NOKIA";
 // const char* password =  "123456789";
+
 String command="";
+
 const char html[] = R"=====(
 <form action="http://192.168.43.242/body" method="post" style=" color:blue;text-align:center"> <input type="hidden" name="command" value="tien"> <button style="font-size: 40"> tien</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:left; margin=25%"> <input type="hidden" name="command" value="trai"> <button style="font-size: 40"> trai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:right"> <input type="hidden" name="command" value="phai"> <button style="font-size: 40"> phai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:center"> <input type="hidden" name="command" value="lui"> <button style="font-size: 40"> lui</button></form><br><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:center"> <input type="hidden" name="command" value="dung"> <button style="font-size: 40"> dung</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:left"> <input type="hidden" name="command" value="quayTrai"> <button style="font-size: 40"> quayTrai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:right"> <input type="hidden" name="command" value="quayPhai"> <button style="font-size: 40"> quayPhai</button></form><form action="http://192.168.43.242/body" method="post" style="color:blue;text-align:right"> <input type="hidden" name="command" value="tulai"> <button style="font-size: 40"> tulai</button></form>
 )=====";
@@ -73,13 +75,10 @@ void handleBody() { //Handler for the body path
              message += "\n";
               message += "trai: ";
               message += trai;
-              message += " cm\n";
               message += "giua: ";
               message += giua;
-              message += " cm\n";
               message += "phai: ";
               message += phai;
-              message += " cm\n";
 
  
       server.send(200, "text/html", message+html);
@@ -169,15 +168,15 @@ void tulai(){
               }
         else {
           quayTrai();
-            delay(random(3000));
-          
+          delay(random(2400));
+          reTrai();
+
               command="command=tulai";
 
                     
         }          
  
 }         
- String message = "";
 
 
  
